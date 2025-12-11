@@ -1,0 +1,14 @@
+$ORIGIN proyectosd.com.
+$TTL 3600
+
+@       IN SOA ns1.proyectosd.com. admin.proyectosd.com. (
+                2024120101 ; serial
+                7200       ; refresh
+                3600       ; retry
+                1209600    ; expire
+                3600 )     ; minimum
+
+        IN NS   ns1.proyectosd.com.
+
+ns1     IN A    10.176.108.194
+www     IN A    10.176.108.194

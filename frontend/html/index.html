@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>E-Commerce SD – Frontend</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --bg-card: #111827;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.1);
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --danger: #f97373;
+        --border: #1f2933;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #1e293b, #020617 60%);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 32px 16px;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 960px;
+        background: linear-gradient(135deg, #020617, #020617 40%, #030712);
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.9);
+        padding: 24px 24px 28px;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin: 0;
+        letter-spacing: 0.03em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      h1 span.badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+      }
+
+      .subtitle {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.1);
+        border: 1px solid rgba(45, 212, 191, 0.3);
+        color: #a5f3fc;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        gap: 18px;
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .card {
+        background: var(--bg-card);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        padding: 16px 16px 18px;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .card-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      button,
+      .btn {
+        border-radius: 999px;
+        border: none;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #0b1120;
+        font-weight: 600;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        filter: brightness(1.05);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+        padding-inline: 10px;
+      }
+
+      .btn-ghost:hover {
+        background: rgba(148, 163, 184, 0.08);
+        color: var(--text-main);
+      }
+
+      .btn-danger {
+        background: transparent;
+        color: var(--danger);
+      }
+
+      .btn-danger:hover {
+        background: rgba(248, 113, 113, 0.08);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        margin-top: 8px;
+      }
+
+      th,
+      td {
+        padding: 6px 8px;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.7);
+      }
+
+      th {
+        text-align: left;
+        color: var(--text-muted);
+        font-weight: 500;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        border-bottom-color: rgba(75, 85, 99, 0.9);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:hover td {
+        background: rgba(15, 23, 42, 0.7);
+      }
+
+      .tag-id {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.72rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+      }
+
+      .price {
+        font-variant-numeric: tabular-nums;
+      }
+
+      form {
+        margin-top: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      input {
+        border-radius: 999px;
+        border: 1px solid rgba(55, 65, 81, 0.9);
+        background: #020617;
+        color: var(--text-main);
+        padding: 7px 10px;
+        font-size: 0.82rem;
+        outline: none;
+        transition: border 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+        background: #020617;
+      }
+
+      .form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      #estado {
+        font-size: 0.78rem;
+      }
+
+      .estado-ok {
+        color: #4ade80;
+      }
+
+      .estado-error {
+        color: var(--danger);
+      }
+
+      .estado-info {
+        color: #fbbf24;
+      }
+
+      .badge-mode {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <div>
+          <h1>
+            E-Commerce SD
+            <span class="badge">Cluster Frontend · Backend · DB · MQ</span>
+          </h1>
+          <p class="subtitle">
+            Este frontend consume el API balanceado del clúster de
+            aplicación y persiste en la base de datos replicada.
+          </p>
+        </div>
+        <div class="pill">Proyecto Sistemas Distribuidos</div>
+      </header>
+
+      <section class="layout">
+        <!-- LISTA -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Productos</div>
+              <div class="card-subtitle">
+                Listado directo desde la base de datos.
+              </div>
+            </div>
+            <button class="btn btn-ghost" id="btn-refrescar">
+              ↻ Actualizar
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th style="text-align: right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-productos">
+              <tr>
+                <td colspan="4">Cargando productos...</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- FORM -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Gestión de producto</div>
+              <div class="card-subtitle">
+                Crear nuevos productos o actualizar existentes.
+              </div>
+            </div>
+            <span id="modoBadge" class="badge-mode">Modo: crear</span>
+          </div>
+
+          <form id="form-producto">
+            <input type="hidden" id="productoId" />
+
+            <div class="field">
+              <label for="nombre">Nombre del producto</label>
+              <input
+                id="nombre"
+                name="nombre"
+                autocomplete="off"
+                required
+                placeholder="Ej: Portátil gamer"
+              />
+            </div>
+
+            <div class="field">
+              <label for="precio">Precio</label>
+              <input
+                id="precio"
+                name="precio"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="Ej: 2500.00"
+              />
+            </div>
+
+            <div class="form-footer">
+              <div>
+                <button type="submit" class="btn btn-primary" id="btn-guardar">
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-ghost"
+                  id="btn-resetear"
+                >
+                  Limpiar
+                </button>
+              </div>
+              <div id="estado"></div>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      // ⚠️ Ajusta esta IP/puerto si tu server tiene otra.
+      const API_BASE = "http://10.176.108.194:8080";
+
+      const tbody = document.getElementById("tbody-productos");
+      const form = document.getElementById("form-producto");
+      const inputId = document.getElementById("productoId");
+      const inputNombre = document.getElementById("nombre");
+      const inputPrecio = document.getElementById("precio");
+      const estadoEl = document.getElementById("estado");
+      const modoBadge = document.getElementById("modoBadge");
+      const btnGuardar = document.getElementById("btn-guardar");
+      const btnResetear = document.getElementById("btn-resetear");
+      const btnRefrescar = document.getElementById("btn-refrescar");
+
+      function setEstado(mensaje, tipo = "info") {
+        estadoEl.textContent = mensaje || "";
+        estadoEl.className = "";
+        if (!mensaje) return;
+        if (tipo === "ok") estadoEl.classList.add("estado-ok");
+        else if (tipo === "error") estadoEl.classList.add("estado-error");
+        else estadoEl.classList.add("estado-info");
+      }
+
+      function setModoCrear() {
+        inputId.value = "";
+        modoBadge.textContent = "Modo: crear";
+        modoBadge.style.borderColor = "rgba(56,189,248,0.4)";
+        modoBadge.style.color = "#9ca3af";
+        btnGuardar.textContent = "Guardar";
+      }
+
+      function setModoEditar(producto) {
+        inputId.value = producto.id;
+        inputNombre.value = producto.nombre;
+        inputPrecio.value = producto.precio;
+        modoBadge.textContent = "Modo: editar #" + producto.id;
+        modoBadge.style.borderColor = "rgba(251,191,36,0.6)";
+        modoBadge.style.color = "#fbbf24";
+        btnGuardar.textContent = "Actualizar";
+      }
+
+      async function cargarProductos() {
+        setEstado("Cargando productos...");
+        tbody.innerHTML =
+          '<tr><td colspan="4">Cargando productos...</td></tr>';
+        try {
+          const resp = await fetch(API_BASE + "/productos");
+          if (!resp.ok) {
+            throw new Error("Estado " + resp.status);
+          }
+          const data = await resp.json();
+          renderProductos(data);
+          setEstado("Productos actualizados", "ok");
+        } catch (err) {
+          console.error(err);
+          tbody.innerHTML =
+            '<tr><td colspan="4">Error al cargar productos</td></tr>';
+          setEstado("Error al cargar productos", "error");
+        }
+      }
+
+      function renderProductos(productos) {
+        if (!productos || productos.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="4">No hay productos registrados</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = "";
+        productos.forEach((p) => {
+          const tr = document.createElement("tr");
+
+          const tdId = document.createElement("td");
+          const badge = document.createElement("span");
+          badge.className = "tag-id";
+          badge.textContent = "#" + p.id;
+          tdId.appendChild(badge);
+
+          const tdNombre = document.createElement("td");
+          tdNombre.textContent = p.nombre;
+
+          const tdPrecio = document.createElement("td");
+          tdPrecio.className = "price";
+          tdPrecio.textContent = parseFloat(p.precio).toFixed(2);
+
+          const tdAcciones = document.createElement("td");
+          tdAcciones.style.textAlign = "right";
+
+          const btnEdit = document.createElement("button");
+          btnEdit.className = "btn btn-ghost";
+          btnEdit.textContent = "Editar";
+          btnEdit.onclick = () =>
+            setModoEditar({
+              id: p.id,
+              nombre: p.nombre,
+              precio: p.precio
+            });
+
+          const btnDel = document.createElement("button");
+          btnDel.className = "btn btn-danger";
+          btnDel.textContent = "Eliminar";
+          btnDel.onclick = () => eliminarProducto(p.id);
+
+          tdAcciones.appendChild(btnEdit);
+          tdAcciones.appendChild(btnDel);
+
+          tr.appendChild(tdId);
+          tr.appendChild(tdNombre);
+          tr.appendChild(tdPrecio);
+          tr.appendChild(tdAcciones);
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      async function guardarProducto(e) {
+        e.preventDefault();
+        const id = inputId.value.trim();
+        const nombre = inputNombre.value.trim();
+        const precio = inputPrecio.value;
+
+        if (!nombre || precio === "") {
+          setEstado("Nombre y precio son obligatorios", "error");
+          return;
+        }
+
+        const payload = {
+          nombre,
+          precio: parseFloat(precio)
+        };
+
+        let url = API_BASE + "/productos";
+        let method = "POST";
+
+        if (id) {
+          url = API_BASE + "/productos/" + id;
+          method = "PUT";
+        }
+
+        btnGuardar.disabled = true;
+        setEstado("Enviando datos...", "info");
+
+        try {
+          const resp = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await resp.json().catch(() => ({}));
+
+          if (!resp.ok) {
+            const msg =
+              data && data.error
+                ? data.error
+                : "Error " + resp.status;
+            setEstado(msg, "error");
+          } else {
+            setEstado(
+              id
+                ? "Producto actualizado correctamente"
+                : "Producto creado correctamente",
+              "ok"
+            );
+            form.reset();
+            setModoCrear();
+            cargarProductos();
+          }
+        } catch (err) {
+          console.error(err);
+          setEstado("Error de red al guardar", "error");
+        } finally {
+          btnGuardar.disabled = false;
+        }
+      }
+
+      async function eliminarProducto(id) {
+        const confirmar = confirm(
+          "¿Seguro que quieres eliminar el producto #" + id + "?"
+        );
+        if (!confirmar) return;
+
+        setEstado("Eliminando producto...", "info");
+        try {
+          const resp = await fetch(API_BASE + "/productos/" + id, {
+            method: "DELETE"
+          });
+          const data = await resp.json().catch(() => ({}));
+
+          if (!resp.ok) {
+            const msg =
+              data && data.error
+                ? data.error
+                : "Error " + resp.status;
+            setEstado(msg, "error");
+          } else {
+            setEstado("Producto eliminado", "ok");
+            cargarProductos();
+          }
+        } catch (err) {
+          console.error(err);
+          setEstado("Error de red al eliminar", "error");
+        }
+      }
+
+      btnRefrescar.addEventListener("click", cargarProductos);
+      form.addEventListener("submit", guardarProducto);
+      btnResetear.addEventListener("click", () => {
+        form.reset();
+        setModoCrear();
+        setEstado("");
+      });
+
+      // Carga inicial
+      cargarProductos();
+    </script>
+  </body>
+</html>

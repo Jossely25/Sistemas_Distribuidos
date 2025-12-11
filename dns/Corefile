@@ -1,0 +1,13 @@
+# Zona para el dominio proyectosd.com
+proyectosd.com {
+    log
+    errors
+    file /zones/proyectosd.com.db
+}
+
+# Para el resto de dominios, reenviamos a DNS públicos
+. {
+    log
+    errors
+    forward . 8.8.8.8 1.1.1.1
+}

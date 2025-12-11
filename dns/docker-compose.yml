@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  coredns:
+    image: coredns/coredns:latest
+    container_name: coredns
+    volumes:
+      - ./Corefile:/Corefile
+      - ./zones:/zones
+    command: ["-conf", "/Corefile"]
+    ports:
+      - "10.176.108.194:53:53/udp"
+      - "10.176.108.194:53:53/tcp"
+    networks:
+      red_dns:
+        ipv4_address: 192.168.3.10
+
+networks:
+  red_dns:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.3.0/24
